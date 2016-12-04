@@ -1,27 +1,21 @@
 import { Injectable } from "@angular/core";
-import { Http, Headers, Response } from "@angular/http";
-import { Observable } from "rxjs/Rx";
-import "rxjs/add/operator/do";
-import "rxjs/add/operator/map";
-
 import { User } from "./user";
-import { Config } from "../config";
 import firebase = require("nativescript-plugin-firebase");
 
 
 @Injectable()
 export class UserService {
-  constructor(private http: Http) {}
+  constructor() {}
 
   register(user: User) {
     return firebase.createUser({
       email: user.email,
       password: user.password
     }).then(
-      function (result: any) {
+      (result: any) => {
         return JSON.stringify(result);
       },
-      function (errorMessage: any) {
+      (errorMessage: any) => {
         alert(errorMessage);
       }
     );
@@ -36,14 +30,15 @@ export class UserService {
     .then((result: any) => {
           // BackendService.token = result.uid;
           // puede ser interesante ver como usa esto
+          console.log("vuelve del login", JSON.stringify(result));
           return JSON.stringify(result);
     }, (errorMessage: any) => {
         alert(errorMessage);
     });
   }
 
-  handleErrors(error: Response) {
-    console.log(JSON.stringify(error.json()));
-    return Observable.throw(error);
+  handleErrors(error) {
+    console.log(JSON.stringify(error));
+    return Promise.reject(error.message);
   }
 }
