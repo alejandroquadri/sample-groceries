@@ -6,45 +6,40 @@ import "rxjs/add/operator/map";
 
 import { User } from "./user";
 import { Config } from "../config";
+import firebase = require("nativescript-plugin-firebase");
+
 
 @Injectable()
 export class UserService {
   constructor(private http: Http) {}
 
   register(user: User) {
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-
-    return this.http.post(
-      Config.apiUrl + "Users",
-      JSON.stringify({
-        Username: user.email,
-        Email: user.email,
-        Password: user.password
-      }),
-      { headers: headers }
-    )
-    .catch(this.handleErrors);
+    return firebase.createUser({
+      email: user.email,
+      password: user.password
+    }).then(
+      function (result: any) {
+        return JSON.stringify(result);
+      },
+      function (errorMessage: any) {
+        alert(errorMessage);
+      }
+    );
   }
 
   login(user: User) {
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-
-    return this.http.post(
-      Config.apiUrl + "oauth/token",
-      JSON.stringify({
-        username: user.email,
-        password: user.password,
-        grant_type: "password"
-      }),
-      { headers: headers }
-    )
-    .map(response => response.json())
-    .do(data => {
-      Config.token = data.Result.access_token;
+    return firebase.login({
+      type: firebase.LoginType.PASSWORD,
+      email: user.email,
+      password: user.password
     })
-    .catch(this.handleErrors);
+    .then((result: any) => {
+          // BackendService.token = result.uid;
+          // puede ser interesante ver como usa esto
+          return JSON.stringify(result);
+    }, (errorMessage: any) => {
+        alert(errorMessage);
+    });
   }
 
   handleErrors(error: Response) {

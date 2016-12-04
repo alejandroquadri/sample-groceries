@@ -51,22 +51,39 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.userService.login(this.user)
-      .subscribe(
-        () => this.router.navigate(["/list"]),
-        (error) => alert("Unfortunately we could not find your account.")
-      );
+    // this.userService.login(this.user)
+    //   .subscribe(
+    //     () => this.router.navigate(["/list"]),
+    //     (error) => alert("Unfortunately we could not find your account.")
+    //   );
+
+      this.userService.login(this.user)
+        .then(() => {
+          this.router.navigate(["/list"]);
+        })
+        .catch((message: any) => {
+        });
   }
 
   signUp() {
-    this.userService.register(this.user)
-      .subscribe(
-        () => {
-          alert("Your account was successfully created.");
-          this.toggleDisplay();
-        },
-        () => alert("Unfortunately we were unable to create your account.")
-      );
+  //   this.userService.register(this.user)
+  //     .subscribe(
+  //       () => {
+  //         alert("Your account was successfully created.");
+  //         this.toggleDisplay();
+  //       },
+  //       () => alert("Unfortunately we were unable to create your account.")
+  //     );
+  // }
+
+  this.userService.register(this.user)
+  .then(() => {
+      alert("Your account was successfully created");
+      this.toggleDisplay();
+    })
+    .catch((message: any) => {
+      alert(message);
+    });
   }
 
   toggleDisplay() {
