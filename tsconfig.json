@@ -6,10 +6,15 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "noEmitHelpers": true,
-        "noEmitOnError": true
+        "noEmitOnError": false
     },
     "exclude": [
         "node_modules",
         "platforms"
+    ],
+    "filesGlob": [
+      "**/*.ts",
+      "**/*.tsx",
+      "!node_modules/**"
     ]
 }
