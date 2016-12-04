@@ -37,6 +37,21 @@ export class UserService {
     });
   }
 
+  // esta funcion no esta implementada
+  resetPassword(email) {
+    return firebase.resetPassword({
+    email: email
+    }).then(
+        () => {
+          // called when password reset was successful,
+          // prompt the user to check his email
+        },
+        (errorMessage: any) => {
+          alert(errorMessage);
+        }
+    ).catch(this.handleErrors);
+  }
+
   handleErrors(error) {
     console.log(JSON.stringify(error));
     return Promise.reject(error.message);
