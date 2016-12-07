@@ -9,7 +9,7 @@
     <Image src="res://add" (tap)="add()" col="1"></Image>
   </GridLayout>
 
-  <ListView [items]="groceryList" row="1" class="small-spacing" [class.visible]="listLoaded">
+  <ListView [items]="lista" row="1" class="small-spacing" [class.visible]="listLoaded">
     <template let-item="item">
       <GridLayout columns="*, auto">
         <Label col="0" [text]="item.name" class="medium-spacing"></Label>

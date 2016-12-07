@@ -15,24 +15,23 @@ export class ListComponent implements OnInit {
   groceryList: Array<Grocery> = [];
   grocery = "";
   isLoading = false;
-  listLoaded = false;
+  listLoaded = true;
+  lista;
 
   @ViewChild("groceryTextField") groceryTextField: ElementRef;
 
   constructor(
     private groceryListService: GroceryListService,
-    private zone: NgZone) {}
+    private zone: NgZone
+  ) {}
 
   ngOnInit() {
-    this.isLoading = true;
-    this.groceryListService.load()
-      .subscribe(loadedGroceries => {
-        loadedGroceries.forEach((groceryObject) => {
-          this.groceryList.unshift(groceryObject);
-        });
-        this.isLoading = false;
-        this.listLoaded = true;
-      });
+    // this.lista = this.groceryListService.groceryList;
+    this.groceryListService.groceryList.subscribe((data) => {
+      // this.lista = JSON.stringify(data);
+      this.lista = data;
+      console.log("Lista", JSON.stringify(this.lista));
+    });
   }
 
   add() {
@@ -46,30 +45,13 @@ export class ListComponent implements OnInit {
     textField.dismissSoftInput();
 
     this.groceryListService.add(this.grocery)
-      .subscribe(
-        groceryObject => {
-          this.groceryList.unshift(groceryObject);
-          this.grocery = "";
-        },
-        () => {
-          alert({
-            message: "An error occurred while adding an item to your list.",
-            okButtonText: "OK"
-          });
-          this.grocery = "";
-        }
-      );
+    .then((ret) => {
+      console.log("vuelve", ret);
+    });
   }
 
-  delete(grocery: Grocery) {
-    this.groceryListService.delete(grocery.id)
-      .subscribe(() => {
-        // Running the array splice in a zone ensures that change detection gets triggered.
-        this.zone.run(() => {
-          let index = this.groceryList.indexOf(grocery);
-          this.groceryList.splice(index, 1);
-        });
-      });
+  delete(grocery) {
+    this.groceryListService.delete(grocery);
   }
 
   share() {
