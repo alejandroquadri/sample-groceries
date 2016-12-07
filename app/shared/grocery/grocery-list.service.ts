@@ -1,13 +1,8 @@
 import { Injectable, NgZone } from "@angular/core";
-import { Http, Headers } from "@angular/http";
 import { Config } from "../config";
 import { Grocery } from "./grocery";
-import { Observable } from "rxjs/Rx";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import "rxjs/add/operator/map";
-
 import firebase = require("nativescript-plugin-firebase");
-// declare var zonedCallback: Function;
 
 @Injectable()
 export class GroceryListService {
@@ -15,14 +10,12 @@ export class GroceryListService {
   groceryList = new BehaviorSubject([]);
 
   constructor(
-    private http: Http,
     private ngZone: NgZone
   ) {
     this.load();
   }
 
   load() {
-    // firebase.addValueEventListener(zonedCallback(this.onQueryEvent.bind(this)), "/list");
     firebase.addValueEventListener((result: any) => {
       this.ngZone.run(() => {
         this.onQueryEvent(result);
@@ -62,8 +55,8 @@ export class GroceryListService {
     .catch(this.handleErrors);
   }
 
-  handleErrors(error: Response) {
-    console.log(JSON.stringify(error.json()));
-    return Observable.throw(error);
+  handleErrors(error) {
+    console.log(JSON.stringify(error));
+    return Promise.reject(error.message);
   }
 }

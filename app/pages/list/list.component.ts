@@ -14,7 +14,7 @@ import * as SocialShare from "nativescript-social-share";
 export class ListComponent implements OnInit {
   groceryList: Array<Grocery> = [];
   grocery = "";
-  isLoading = false;
+  isLoading = true;
   listLoaded = true;
   lista;
 
@@ -26,11 +26,11 @@ export class ListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // this.lista = this.groceryListService.groceryList;
-    this.groceryListService.groceryList.subscribe((data) => {
-      // this.lista = JSON.stringify(data);
+    this.groceryListService.groceryList
+    .subscribe((data) => {
       this.lista = data;
       console.log("Lista", JSON.stringify(this.lista));
+      this.isLoading = false;
     });
   }
 
@@ -47,6 +47,7 @@ export class ListComponent implements OnInit {
     this.groceryListService.add(this.grocery)
     .then((ret) => {
       console.log("vuelve", ret);
+      this.grocery = "";
     });
   }
 
